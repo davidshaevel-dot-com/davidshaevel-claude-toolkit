@@ -62,28 +62,38 @@ gh api "repos/${REPO}/pulls/<PR>/comments" --paginate \
   --jq '[.[] | {id, in_reply_to_id, line, path, body, created_at, pull_request_review_id, user: .user.login}]'
 ```
 
-**Find unreplied original comments** — original comments have `in_reply_to_id: null`. Filter out those that already have a reply from `dshaevel`:
+**Find unreplied comments** using two separate queries with positive-match selectors only.
+
+> **zsh compatibility:** Never use `!=` in jq expressions passed via `--jq` — zsh interprets `!` as history expansion and the command will fail. Always use positive `==` selectors in separate queries instead.
 
 ```bash
-# Get all original comment IDs (from reviewer, not replies)
-ORIGINALS=$(gh api "repos/${REPO}/pulls/<PR>/comments?per_page=100" \
-  --jq '[.[] | select(.in_reply_to_id == null) | select(.user.login != "dshaevel") | .id]')
+# Step 1: Get all original Gemini comments (not replies)
+gh api "repos/${REPO}/pulls/<PR>/comments?per_page=100" \
+  --jq '[.[] | select(.in_reply_to_id == null) | select(.user.login == "gemini-code-assist[bot]") | {id, path, created_at, body_preview: (.body[0:120])}]'
 
-# Get IDs that have been replied to by dshaevel
-REPLIED=$(gh api "repos/${REPO}/pulls/<PR>/comments?per_page=100" \
-  --jq '[.[] | select(.in_reply_to_id > 0) | select(.user.login == "dshaevel") | .in_reply_to_id] | unique')
+# Step 2: Get IDs already replied to by dshaevel
+gh api "repos/${REPO}/pulls/<PR>/comments?per_page=100" \
+  --jq '[.[] | select(.in_reply_to_id > 0) | select(.user.login == "dshaevel") | .in_reply_to_id]'
 
-# Unreplied = ORIGINALS - REPLIED (compare with jq)
+# Step 3: Compare — any ID in Step 1 not in Step 2 is unreplied
+```
+
+To fetch the **full body** of specific unreplied comments by ID:
+
+```bash
+gh api "repos/${REPO}/pulls/<PR>/comments?per_page=100" \
+  --jq '[.[] | select(.id == 12345 or .id == 67890) | {id, path, line, body}]'
 ```
 
 Alternatively, fetch comments for the **latest review** specifically:
 
 ```bash
-# Get the latest gemini review ID
-REVIEW_ID=$(gh api "repos/${REPO}/pulls/<PR>/reviews" \
-  --jq '[.[] | select(.user.login == "gemini-code-assist[bot]")] | last | .id')
+# Get the latest gemini review ID and summary
+gh api "repos/${REPO}/pulls/<PR>/reviews" \
+  --jq '[.[] | select(.user.login == "gemini-code-assist[bot]")] | last | {id, body, state}'
 
-# Fetch only that review's comments
+# Fetch only that review's inline comments
+REVIEW_ID=<id-from-above>
 gh api "repos/${REPO}/pulls/<PR>/reviews/${REVIEW_ID}/comments" \
   --jq '[.[] | {id, line, path, body, created_at}]'
 ```
