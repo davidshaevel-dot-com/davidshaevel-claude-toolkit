@@ -117,7 +117,7 @@ When a feature worktree is being removed after a PR merge, the worktree's `CLAUD
 ## Current State
 - Agent: [Claude Code | Cursor]
 - Branch: [current branch]
-- Last session: [ISO timestamp]
+- Last session: [YYYY-MM-DD HH:MM]
 - Active work: [issue ID and description]
 - Blockers: [list or "None"]
 - Next steps: [bullet list]
@@ -142,7 +142,7 @@ When a feature worktree is being removed after a PR merge, the worktree's `CLAUD
 - The "Current State" section should be enough to resume work without reading history
 - Session History provides deeper context if needed
 - Always update SESSION_LOG.md before ending a session, even if work was minor
-- **Timestamps are required** — every session history entry MUST include `HH:MM` (24-hour local time), not just the date. Run `date +"%Y-%m-%d %H:%M"` to get the current timestamp. This is critical for accurate ordering when multiple agents work in parallel.
+- **Timestamps are required** — both `Last session:` in Current State and every session history heading MUST include `HH:MM` (24-hour local time), not just the date. Run `date +"%Y-%m-%d %H:%M"` to get the current timestamp. This is critical for accurate ordering when multiple agents work in parallel.
 
 #### Worktree Rules
 
