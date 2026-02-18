@@ -62,7 +62,7 @@ When a feature worktree is being removed after a PR merge, the worktree's sessio
 
 1. Read `main/SESSION_LOG.md` Session History entries
 2. Read `<worktree>/SESSION_LOG.md` Session History entries
-3. **Interleave** both sets of entries by date (newest first)
+3. **Interleave** both sets of entries by timestamp (newest first)
 4. Update main's **Current State** to reflect the post-merge project state (e.g., mark the completed work as done, update next steps)
 5. Write the merged result to `main/SESSION_LOG.md`
 6. **Trim** Session History to the last 30 entries
@@ -142,11 +142,12 @@ When a feature worktree is being removed after a PR merge, the worktree's `CLAUD
 - The "Current State" section should be enough to resume work without reading history
 - Session History provides deeper context if needed
 - Always update SESSION_LOG.md before ending a session, even if work was minor
+- **Timestamps are required** — every session history entry MUST include `HH:MM` (24-hour local time), not just the date. Run `date +"%Y-%m-%d %H:%M"` to get the current timestamp. This is critical for accurate ordering when multiple agents work in parallel.
 
 #### Worktree Rules
 
 - **One worktree, one SESSION_LOG.md** — each worktree maintains its own independent session log. Never read or write another worktree's SESSION_LOG.md.
 - **Branch determines the target** — at session end, the branch you worked on determines which worktree's SESSION_LOG.md to update. If you're unsure, ask the user.
 - **Bare repo root has no SESSION_LOG.md** — in bare+worktree repos, SESSION_LOG.md lives inside worktree directories (e.g., `main/SESSION_LOG.md`, `tt-154.../SESSION_LOG.md`), never at the bare repo root.
-- **Merge, never copy** — during worktree cleanup, merge all gitignored files into main: `.envrc` (line-by-line), `CLAUDE.local.md` (section-by-section), and `SESSION_LOG.md` (interleave by date). Never use `cp` to overwrite.
+- **Merge, never copy** — during worktree cleanup, merge all gitignored files into main: `.envrc` (line-by-line), `CLAUDE.local.md` (section-by-section), and `SESSION_LOG.md` (interleave by timestamp). Never use `cp` to overwrite.
 - **When in doubt, ask** — if you cannot determine which worktree the session belongs to, ask the user rather than guessing.

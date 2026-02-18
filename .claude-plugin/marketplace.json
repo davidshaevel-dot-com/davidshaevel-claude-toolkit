@@ -9,7 +9,7 @@
     {
       "name": "davidshaevel-claude-toolkit",
       "description": "Personal development conventions, skills, and project templates for Claude Code",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "source": "./",
       "author": {
         "name": "David Shaevel",
