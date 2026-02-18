@@ -35,11 +35,15 @@ digraph resolve_review {
 
 ### 1. Fetch PR Comments
 
-Detect the repo owner/name from the current git remote (do not hardcode):
+Detect the repo owner/name from the current git remote (do not hardcode).
+
+> **Permission compatibility:** Always run `gh` commands as standalone statements — never chain with `&&` or wrap in `$()` variable assignments in the same Bash call. Claude Code's shell-aware permission matching evaluates each part of a chain independently, so `REPO=$(gh repo view ...) && echo "$REPO"` won't match a `Bash(gh repo view *)` permission even though the `gh` command itself would. Instead, run the `gh` command alone and capture the tool result.
 
 ```bash
-REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
+gh repo view --json nameWithOwner -q .nameWithOwner
 ```
+
+Store the result as `REPO` for subsequent commands.
 
 Fetch review context:
 
