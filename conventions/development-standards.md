@@ -152,25 +152,24 @@ git worktree remove <worktree-folder-name>
 
 ### Worktree Cleanup - IMPORTANT
 
-**Before removing a worktree**, copy gitignored config files and merge session history:
+**Before removing a worktree**, merge all gitignored files from the feature worktree into main:
 
 ```bash
-# Copy config files (safe to overwrite — these are identical across worktrees)
-cp <worktree-name>/.envrc main/.envrc
-cp <worktree-name>/CLAUDE.local.md main/CLAUDE.local.md
-
-# NEVER cp SESSION_LOG.md — always MERGE session history
-# Use the session-handoff skill's "Worktree Cleanup" process to merge
-# the worktree's session history into main/SESSION_LOG.md by date
+# NEVER use cp for gitignored files — always MERGE
+# Use the session-handoff skill's "Worktree Cleanup" sections to merge:
+#   - .envrc: line-by-line comparison
+#   - CLAUDE.local.md: section-by-section comparison
+#   - SESSION_LOG.md: interleave session history entries by date
 ```
 
 **Workflow:**
 1. Merge PR: `gh pr merge <PR_NUMBER> --squash`
 2. Pull changes into main worktree: `cd main && git pull`
 3. Delete remote branch: `git push origin --delete <branch-name>`
-4. Copy gitignored config files from feature worktree to main (`.envrc`, `CLAUDE.local.md`)
-5. **Merge** worktree's SESSION_LOG.md into main's SESSION_LOG.md (see `session-handoff` skill — Worktree Cleanup section)
-6. Remove the worktree: `git worktree remove <worktree-name>`
+4. **Merge** worktree's `.envrc` into main's `.envrc` (see `session-handoff` skill — Worktree Cleanup section)
+5. **Merge** worktree's `CLAUDE.local.md` into main's `CLAUDE.local.md` (see `session-handoff` skill — Worktree Cleanup section)
+6. **Merge** worktree's `SESSION_LOG.md` into main's `SESSION_LOG.md` (see `session-handoff` skill — Worktree Cleanup section)
+7. Remove the worktree: `git worktree remove <worktree-name>`
 
 ---
 

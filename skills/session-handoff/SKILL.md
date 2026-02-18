@@ -69,6 +69,46 @@ When a feature worktree is being removed after a PR merge, the worktree's sessio
 
 **Important:** Do NOT use `cp <worktree>/SESSION_LOG.md main/SESSION_LOG.md` — this destroys session history from other worktrees that was previously merged into main.
 
+### Worktree Cleanup (Merging .envrc)
+
+When a feature worktree is being removed after a PR merge, the worktree's `.envrc` must be **merged** into main's `.envrc` — never copied with `cp`.
+
+`.envrc` is a flat key=value shell file. Compare line by line.
+
+**Merge process:**
+
+1. Read `main/.envrc`
+2. Read `<worktree>/.envrc`
+3. Compare **line by line**:
+   - If only one version has a real value (the other has a placeholder or is empty), keep the real value
+   - If both have the same value, keep it as-is
+   - If values differ and one is clearly more recent or complete, keep the more complete/recent value
+   - If values differ and neither is clearly "better", keep main's value and add a comment flagging the conflict: `# MERGE CONFLICT: worktree had "<worktree value>"`
+4. If the worktree version has variables that main does not, append them
+5. Write the merged result to `main/.envrc`
+
+**Important:** Do NOT use `cp <worktree>/.envrc main/.envrc` — main's copy may contain updates made independently while the feature worktree was active.
+
+### Worktree Cleanup (Merging CLAUDE.local.md)
+
+When a feature worktree is being removed after a PR merge, the worktree's `CLAUDE.local.md` must be **merged** into main's `CLAUDE.local.md` — never copied with `cp`.
+
+`CLAUDE.local.md` is a structured markdown document with tables and sections. Unlike SESSION_LOG.md, it is not chronological — it requires section-by-section comparison.
+
+**Merge process:**
+
+1. Read `main/CLAUDE.local.md`
+2. Read `<worktree>/CLAUDE.local.md`
+3. Compare **section by section** (e.g., "Cloud Account Details", "Infrastructure Details", "Cost Summary")
+4. For each section:
+   - If only one version has content (the other has placeholders like `[account ID or name]` or `...`), keep the version with real content
+   - If both have the same value, keep it as-is
+   - If values differ and one is clearly more recent or complete (e.g., an updated cost figure, a filled-in URL replacing a placeholder), keep the more complete/recent value
+   - If values differ and neither is clearly "better", keep main's value and add a comment flagging the conflict: `<!-- MERGE CONFLICT: worktree had "value" -->`
+5. Write the merged result to `main/CLAUDE.local.md`
+
+**Important:** Do NOT use `cp <worktree>/CLAUDE.local.md main/CLAUDE.local.md` — main's copy may contain updates made independently while the feature worktree was active.
+
 ### SESSION_LOG.md Format
 
 ```markdown
@@ -76,7 +116,6 @@ When a feature worktree is being removed after a PR merge, the worktree's sessio
 
 ## Current State
 - Agent: [Claude Code | Cursor]
-- Session ID: [session/conversation ID]
 - Branch: [current branch]
 - Last session: [ISO timestamp]
 - Active work: [issue ID and description]
@@ -85,7 +124,7 @@ When a feature worktree is being removed after a PR merge, the worktree's sessio
 
 ## Session History
 
-### YYYY-MM-DD HH:MM — [Agent Name] (Session: [ID])
+### YYYY-MM-DD HH:MM — [Agent Name]
 **What was done:**
 - [bullet list]
 
@@ -95,11 +134,6 @@ When a feature worktree is being removed after a PR merge, the worktree's sessio
 **Open questions:**
 - [list or "None"]
 ```
-
-### Finding the Session ID
-
-- **Claude Code:** The session ID is in the JSONL transcript filename, typically a UUID like `9e8d2ac4-d0a0-4563-b79e-2a7dc416a1ad`. You can find it from the `CLAUDE_SESSION_ID` environment variable if available, or from the transcript path.
-- **Cursor:** Use the conversation/composer ID from the Cursor IDE.
 
 ### Rules
 
@@ -114,5 +148,5 @@ When a feature worktree is being removed after a PR merge, the worktree's sessio
 - **One worktree, one SESSION_LOG.md** — each worktree maintains its own independent session log. Never read or write another worktree's SESSION_LOG.md.
 - **Branch determines the target** — at session end, the branch you worked on determines which worktree's SESSION_LOG.md to update. If you're unsure, ask the user.
 - **Bare repo root has no SESSION_LOG.md** — in bare+worktree repos, SESSION_LOG.md lives inside worktree directories (e.g., `main/SESSION_LOG.md`, `tt-154.../SESSION_LOG.md`), never at the bare repo root.
-- **Merge, never copy** — during worktree cleanup, interleave session history entries by date into main's SESSION_LOG.md. Never use `cp` to overwrite.
+- **Merge, never copy** — during worktree cleanup, merge all gitignored files into main: `.envrc` (line-by-line), `CLAUDE.local.md` (section-by-section), and `SESSION_LOG.md` (interleave by date). Never use `cp` to overwrite.
 - **When in doubt, ask** — if you cannot determine which worktree the session belongs to, ask the user rather than guessing.
