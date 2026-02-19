@@ -1,4 +1,4 @@
-# davidshaevel-claude-toolkit
+# davidshaevel-marketplace
 
 Personal Claude Code plugin providing development conventions, skills, and project templates.
 
@@ -12,10 +12,10 @@ Personal Claude Code plugin providing development conventions, skills, and proje
 
 ```bash
 # Add as a marketplace
-/plugin marketplace add davidshaevel-dot-com/davidshaevel-claude-toolkit
+/plugin marketplace add davidshaevel-dot-com/davidshaevel-marketplace
 
 # Install the plugin
-/plugin install davidshaevel-claude-toolkit@davidshaevel-claude-toolkit
+/plugin install davidshaevel-marketplace@davidshaevel-claude-toolkit
 ```
 
 ## Skills
@@ -42,24 +42,24 @@ After pushing a new version to the repository, three locations must be updated f
 The marketplace directory is a git clone that needs to be pulled:
 
 ```bash
-git -C ~/.claude/plugins/marketplaces/davidshaevel-claude-toolkit pull origin main
+git -C ~/.claude/plugins/marketplaces/davidshaevel-marketplace pull origin main
 ```
 
 ### 2. Plugin cache
 
-The cache stores versioned clones at `~/.claude/plugins/cache/davidshaevel-claude-toolkit/davidshaevel-claude-toolkit/<version>/`. Create a new directory for the new version:
+The cache stores versioned clones at `~/.claude/plugins/cache/davidshaevel-marketplace/davidshaevel-claude-toolkit/<version>/`. Create a new directory for the new version:
 
 ```bash
 # Clone the new version tag into the cache
 git clone --branch v<NEW_VERSION> --depth 1 \
-  git@github.com:davidshaevel-dot-com/davidshaevel-claude-toolkit.git \
-  ~/.claude/plugins/cache/davidshaevel-claude-toolkit/davidshaevel-claude-toolkit/<NEW_VERSION>
+  git@github.com:davidshaevel-dot-com/davidshaevel-marketplace.git \
+  ~/.claude/plugins/cache/davidshaevel-marketplace/davidshaevel-claude-toolkit/<NEW_VERSION>
 
 # Optionally recreate the old version directory from its tag (keeps it clean)
-rm -rf ~/.claude/plugins/cache/davidshaevel-claude-toolkit/davidshaevel-claude-toolkit/<OLD_VERSION>
+rm -rf ~/.claude/plugins/cache/davidshaevel-marketplace/davidshaevel-claude-toolkit/<OLD_VERSION>
 git clone --branch v<OLD_VERSION> --depth 1 \
-  git@github.com:davidshaevel-dot-com/davidshaevel-claude-toolkit.git \
-  ~/.claude/plugins/cache/davidshaevel-claude-toolkit/davidshaevel-claude-toolkit/<OLD_VERSION>
+  git@github.com:davidshaevel-dot-com/davidshaevel-marketplace.git \
+  ~/.claude/plugins/cache/davidshaevel-marketplace/davidshaevel-claude-toolkit/<OLD_VERSION>
 ```
 
 ### 3. Installed plugins registry

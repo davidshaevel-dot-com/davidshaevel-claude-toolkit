@@ -1,4 +1,4 @@
-# davidshaevel-claude-toolkit - Claude Context
+# davidshaevel-marketplace - Claude Context
 
 <!-- If CLAUDE.local.md exists, read it for additional context (account IDs, resource details, etc.) -->
 
@@ -36,7 +36,7 @@ Plugin Load Flow:
 ## Repository Structure
 
 ```
-davidshaevel-claude-toolkit/
+davidshaevel-marketplace/
 │
 ├── .bare/                             # Bare git repository
 ├── .git                               # Points to .bare
@@ -117,5 +117,5 @@ No environment variables required for the plugin itself. Individual projects boo
 
 ## References
 
-- **GitHub Repository:** [davidshaevel-claude-toolkit](https://github.com/davidshaevel-dot-com/davidshaevel-claude-toolkit)
+- **GitHub Repository:** [davidshaevel-marketplace](https://github.com/davidshaevel-dot-com/davidshaevel-marketplace)
 - **Linear Project:** [Team Tacocat](https://linear.app/davidshaevel-dot-com)
