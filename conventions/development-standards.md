@@ -184,6 +184,16 @@ git worktree remove <worktree-folder-name>
 4. Link related issues (blockers, related work)
 5. Mark "Done" when phase complete
 
+### Formatting (Issues, Projects, Initiatives)
+
+**Critical: Never copy the `description` field from Linear API responses (e.g., `get_issue`, `get_project`, `get_initiative`) back into update calls.** The API returns descriptions with escaped characters (`\\n`, `\\*`, `\\|`) that compound with each read/write cycle, destroying formatting.
+
+**When updating any Linear description (issues, projects, initiatives, status updates):**
+1. **Write fresh markdown from scratch** — compose the full description as clean markdown, using the API response only as a reference for content
+2. **Use actual newlines** — not `\n` escape sequences
+3. **Use standard markdown** — `*`, `-`, `#`, `|` etc. without backslash escaping
+4. **Links use standard markdown** — `[text](url)`, not `[text](<url>)`
+
 ---
 
 ## Environment Variables
