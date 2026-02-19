@@ -192,7 +192,26 @@ git worktree remove <worktree-folder-name>
 1. **Write fresh markdown from scratch** — compose the full description as clean markdown, using the API response only as a reference for content
 2. **Use actual newlines** — not `\n` escape sequences
 3. **Use standard markdown** — `*`, `-`, `#`, `|` etc. without backslash escaping
-4. **Links use standard markdown** — `[text](url)`, not `[text](<url>)`
+4. **Links use standard markdown** — `[text](url)`, not `[text](<url>)` (Linear doesn't need angle brackets around URLs)
+
+**Example — correct:**
+```
+## Section Header
+
+**Bold text** and a [link](https://example.com)
+
+| Col 1 | Col 2 |
+| -- | -- |
+| data | data |
+
+* Bullet item
+* Another item
+```
+
+**Example — wrong (what happens when you copy from get_issue):**
+```
+## Section Header\\\\n\\\\n**Bold text** and a [link](<https://example.com>)\\\\n\\\\n| Col 1 | Col 2 |\\\\n| -- | -- |\\\\n
+```
 
 ---
 
